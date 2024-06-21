@@ -28,7 +28,9 @@ const Home = () => {
         setLoader(!loader)
     }
 
-    useEffect(() => fetchHomeData, [])
+    useEffect(() => {
+        fetchHomeData()
+    }, [])
 
     const onSubmitForm = async event => {
         event.preventDefault()
