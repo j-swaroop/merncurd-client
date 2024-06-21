@@ -4,6 +4,7 @@ import ThemeContext from "../../context/ThemeContext";
 import axios from 'axios'
 import Header from "../Header";
 import User from "../User";
+import { InfinitySpin } from 'react-loader-spinner'
 
 const Home = () => {
     const {isDarkMode} = useContext(ThemeContext)
@@ -18,10 +19,12 @@ const Home = () => {
         responseText: '',
         required: false
     })
+    const [loader, setLoader] = useState(true)
 
     const fetchHomeData = async () => {
         const response = await axios.get('https://merncurdserver.onrender.com/users')
         setHomeData(response.data)
+        setLoader(!loader)
     }
 
     useEffect(() => fetchHomeData, [])
@@ -75,10 +78,12 @@ const Home = () => {
     } 
 
     const onDeleteUser = async id => {
+        
         const response = await axios.delete('https://merncurdserver.onrender.com/users', {data: {idd:id}})
         console.log(response)
 
         setHomeData(homeData.filter(item => item._id !== id))
+       
     }
     
     return(
@@ -117,9 +122,16 @@ const Home = () => {
                     </Form>}
                     {!addUser.isAddUser && <AddUserButton isdarkmode={isDarkMode} onClick={onAddUserBtnClicked}> Add User </AddUserButton>}
                     {addUser.responseText !== '' && <Text isdarkmode={isDarkMode}> {addUser.responseText} </Text>}
-                    <UsersList>
-                        {homeData.map(item => <User data={item} key={item._id} onDeleteUser={onDeleteUser}/>)}
-                    </UsersList>
+                    
+                    {loader ? <InfinitySpin
+                                visible={true}
+                                width="200"
+                                color="#4fa94d"
+                                ariaLabel="infinity-spin-loading"
+                                /> :   
+                        <UsersList>
+                            {homeData.map(item => <User data={item} key={item._id} onDeleteUser={onDeleteUser}/>)}
+                        </UsersList>}
                 </ResponsiveContainer>
             </MainConatiner>
         </>
