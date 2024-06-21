@@ -23,6 +23,7 @@ const Home = () => {
 
     const fetchHomeData = async () => {
         const response = await axios.get('https://merncurdserver.onrender.com/users')
+        console.log(response.data)
         setHomeData(response.data)
         setLoader(!loader)
     }
